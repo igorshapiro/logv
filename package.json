@@ -1,0 +1,13 @@
+{
+  "name": "LogV",
+  "dependencies": {
+    "grunt": "",
+    "readline": "",
+    "colors": "",
+    "ttys": "",
+    "byline": "",
+    "type-of-is": "",
+    "moment": "",
+    "blessed": ""
+  }
+}
