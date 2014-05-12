@@ -111,7 +111,8 @@ class RailsLogParser extends Emitter
       return s
     if x.__type == 'stacktrace'
       s = ""
-      s += "#{l.file.yellow}:#{l.line.blue}".underline + "\r\n" for l in x.stacktrace
+      for l in x.stacktrace
+        s += "#{l.file.yellow}:#{l.line.blue}".underline + " in #{l.method.red}\r\n" 
       return s
     if x.__type == 'activerecord'
       highlighted =
