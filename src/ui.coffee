@@ -27,15 +27,7 @@ class UI
       if patchCount == 0
         selectedItem = logWidget.ritems[logWidget.selected]
         return unless selectedItem.__items
-        if selectedItem.__expanded
-          for subItem in selectedItem.__items
-            logWidget.removeItem(subItem.__uiElement)
-          selectedItem.__expanded = false
-        else
-          for i in [selectedItem.__items.length - 1..1] by -1
-            item = selectedItem.__items[i]
-            item.__uiElement = logWidget.add(item, logWidget.selected)
-          selectedItem.__expanded = true
+        selectedItem.toggle()
         screen.render()
         patchCount += 1
       else
@@ -57,7 +49,7 @@ class UI
       process.exit(0);
 
     screen.key 'escape', ->
-      cmdWidget = blessed.textarea({
+      cmdWidget = blessed.textbox({
         top: screen.height - 1
         height: 1
         width: "100%"
@@ -66,6 +58,9 @@ class UI
         inputOnFocus: true
       })
       screen.append(cmdWidget)
+      cmdWidget.on 'submit', (cmd) ->
+        console.log(cmd)
+
       cmdWidget.focus()
       cmdWidget.readInput((x)-> console.log(x))
       screen.render()
@@ -74,14 +69,31 @@ class UI
     @itemsCount = 0
 
   appendItem: (item) =>
+    item.__proto__ = LogItem.prototype
     @itemsCount += 1
     uiElement = @logWidget.add(item)
     item.__uiElement = uiElement
+    item.__uiContainer = @logWidget
     screen.render()
 
   updateItem: (item) =>
     element = item.__uiElement
     element.setContent(@rules.shortFormat(item))
     screen.render()
+
+class LogItem
+  collapse: ->
+    for subItem in this.__items
+      this.__uiContainer.removeItem(subItem.__uiElement)
+    this.__expanded = false
+
+  expand: ->
+    for i in [this.__items.length - 1..1] by -1
+      item = this.__items[i]
+      item.__uiElement = this.__uiContainer.add(item, this.__uiContainer.selected)
+    this.__expanded = true
+
+  toggle: ->
+    if this.__expanded then this.collapse() else this.expand()
 
 module.exports = UI
