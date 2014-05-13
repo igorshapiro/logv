@@ -1,6 +1,7 @@
 # For debugging:
 # npm install -g node-inspector
 # coffee -c -m src/**/*.coffee && cat sample | node-debug src/logv.js
+# rm src/**/*.js src/**/*.map
 
 # Profiling:
 # npm install -g tick
