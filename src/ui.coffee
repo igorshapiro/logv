@@ -3,8 +3,10 @@ ttys = require 'ttys'
 blessed = require 'blessed'
 screen = blessed.screen({input: ttys.stdin})
 program = blessed.program({input: ttys.stdin})
+events = require 'events'
+Emitter = events.EventEmitter
 
-class UI
+class UI extends Emitter
   constructor: (@rules) ->
     @logWidget = blessed.list({
       scrollbar: { bg: 'blue' }
@@ -18,17 +20,15 @@ class UI
       height: screen.height - 1
       width: "100%"
     })
-    logWidget = @logWidget
 
     # WORKAROUND: for some reason the 'action' event is fired twice
     # we use the count variable to prevent duplicate runs
     patchCount = 0
-    logWidget.on 'action', ->
+    @logWidget.on 'action', =>
       if patchCount == 0
-        selectedItem = logWidget.ritems[logWidget.selected]
-        return unless selectedItem.__items
+        selectedItem = @logWidget.ritems[@logWidget.selected]
+        return unless selectedItem && selectedItem.__items
         selectedItem.toggle()
-        screen.render()
         patchCount += 1
       else
         patchCount = 0
@@ -48,7 +48,7 @@ class UI
     screen.key 'q', ->
       process.exit(0);
 
-    screen.key 'escape', ->
+    screen.key 'escape', =>
       cmdWidget = blessed.textbox({
         top: screen.height - 1
         height: 1
@@ -58,28 +58,36 @@ class UI
         inputOnFocus: true
       })
       screen.append(cmdWidget)
-      cmdWidget.on 'submit', (cmd) ->
-        console.log(cmd)
+      cmdWidget.on 'submit', (cmd) =>
+        @emit('command', cmd)
 
       cmdWidget.focus()
-      cmdWidget.readInput((x)-> console.log(x))
+      cmdWidget.readInput() #((x)-> console.log(x))
       screen.render()
 
-    screen.render()
+    @screenRefreshLoop()
     @itemsCount = 0
 
+  screenRefreshLoop: () =>
+    screen.render()
+    setTimeout(@screenRefreshLoop, 200)
+
+  setItems: (items) =>
+    @logWidget.setItems([])
+    @appendItem(item) for item in items
+
   appendItem: (item) =>
-    item.__proto__ = LogItem.prototype
+    unless item.__uiInitialized
+      item.__proto__ = LogItem.prototype
+      item.__uiInitialized = true
     @itemsCount += 1
     uiElement = @logWidget.add(item)
     item.__uiElement = uiElement
     item.__uiContainer = @logWidget
-    screen.render()
 
   updateItem: (item) =>
     element = item.__uiElement
-    element.setContent(@rules.shortFormat(item))
-    screen.render()
+    element.setContent(item.text)
 
 class LogItem
   collapse: ->
