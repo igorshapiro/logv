@@ -1,5 +1,24 @@
 {
-  "name": "LogV",
+  "name": "logv",
+  "version": "0.0.3",
+  "keywords": ["log", "logging"],
+  "homepage": "https://github.com/igorshapiro/logv",
+  "bugs": {
+    "url": "https://github.com/igorshapiro/logv/issues",
+    "email": "shapigor@gmail.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/igorshapiro/logv.git"
+  },
+  "license": "MIT",
+  "author": {
+    "name": "Igor Shapiro",
+    "email": "shapigor@gmail.com"
+  },
+  "files": [
+    "src/"
+  ],
   "dependencies": {
     "grunt": "",
     "readline": "",
