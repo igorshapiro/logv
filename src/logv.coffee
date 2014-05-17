@@ -19,6 +19,7 @@ colors = require 'colors'
 Type = require 'type-of-is'
 rules = (require './rules').rails
 UI = require './ui'
+CommandParser = require './commands'
 
 class LogStream extends Emitter
   constructor: (stream) ->
@@ -32,7 +33,7 @@ BUFFER_SIZE = 1000
 buffer = []
 
 ui = new UI(rules)
-filters = []
+cmdParser = new CommandParser(buffer, ui)
 
 parseCmd = (s) ->
   match = s.match /^(show|hide) (.*)$/
@@ -47,19 +48,10 @@ parseCmd = (s) ->
     }
   return cmd
 
-matches = (obj, constraints) ->
-
-# console.log(parseCmd('hide type=exception path!=http://localhost/api/v1/'))
-# process.exit(0)
-
 ui.on('command', (cmd) ->
-  debugger
-  if cmd == 'clear'
-    ui.setItems([])
-    return
-  if cmd == 'reset'
-    ui.setItems(buffer)
-    return
+  cmdParser
+    .parse(cmd)
+    .execute()
 )
 
 currentScope = null

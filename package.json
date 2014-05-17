@@ -1,6 +1,6 @@
 {
   "name": "logv",
-  "version": "0.0.4",
+  "version": "0.0.6",
   "keywords": ["log", "logging"],
   "homepage": "https://github.com/igorshapiro/logv",
   "bugs": {
