@@ -6,11 +6,44 @@ Developer tool for better real-time log visualization.
 **Note**: currently only *Rails* logs are supported. But you're welcome
 to contribute a parser for your framework.
 
+## Installation
+
+```sh
+npm install -g logv
+```
+
+## Usage
+
+```sh
+cat some.log | logv
+```
+
+or
+
+```sh
+rails s | logv
+```
+
+Press ESCape for command mode
+
+## Commands
+
+Available commands are:
+
+  - show [list of constraints]
+    - Example: show verb=GET path=~users
+  - hide [list of contraints]
+    - Example: hide verb=GET path=~status
+  - reset
+    - Resets the filters and shows last 1000 items
+  - clear
+    - Clears the list
+
 ## Features:
 
 - Transforms all log records to Javascript objects, which allows you to
-  - Include/exclude them based on attributes (TBD)
-  - query them (TBD)
+  - Include/exclude them based on attributes
+  - query them
 - Scopes
   - All logging for a single request can be rendered as 1 expandable line
 - Custom highlighting of log records (like SQL, JSON, XML, stacktraces)
