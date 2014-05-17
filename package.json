@@ -1,11 +1,14 @@
 {
   "name": "logv",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "keywords": ["log", "logging"],
   "homepage": "https://github.com/igorshapiro/logv",
   "bugs": {
     "url": "https://github.com/igorshapiro/logv/issues",
     "email": "shapigor@gmail.com"
+  },
+  "bin": {
+    "logv": "./src/logv.coffee"
   },
   "repository": {
     "type": "git",
@@ -27,6 +30,6 @@
     "byline": "",
     "type-of-is": "",
     "moment": "",
-    "blessed": ""
+    "blessed": "igorshapiro/blessed"
   }
 }
