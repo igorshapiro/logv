@@ -15,7 +15,7 @@ class FilterCommandBase extends CommandBase
     throw "Unknown command: #{cmdString}" unless match
 
     @constraints = for expr in match[1].split(' ')
-      expr_match = expr.match /^(\w+)(\=|\!\=)(.*)$/
+      expr_match = expr.match /^(\w+)(\=\~?|\!\=|)(.*)$/
       {
         left: expr_match[1],
         operator: expr_match[2],
@@ -23,8 +23,12 @@ class FilterCommandBase extends CommandBase
       }
 
   matchConstraint: (item, c) ->
-    return item[c.left] == c.right if c.operator == '='
-    return item[c.left] != c.right if c.operator == '!='
+    return unless item[c.left]
+    left = item[c.left].toString()
+    right = c.right.toString()
+    return left == right if c.operator == '='
+    return left != right if c.operator == '!='
+    return left.indexOf(right) != -1 if c.operator == '=~'
     return false
 
   isMatch: (item)->
